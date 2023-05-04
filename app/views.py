@@ -20,7 +20,13 @@ def registration(request):
             profile_non_save.username=user_non_save
             profile_non_save.save()
 
+            send_mail('this is my project mail',
+                      "hai how are you em chestunav call chey",
+                      'vinayhampi31@gmail.com',
+                      [user_non_save.email],
+                      fail_silently=True
 
-        return HttpResponse('invalid data')
-        
+                      )
+
+        return HttpResponse('mail send successfully')    
     return render(request,'registration.html',d)
