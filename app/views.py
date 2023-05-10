@@ -41,12 +41,11 @@ def registration(request):
                       'vinayhampi31@gmail.com',
                       [user_non_save.email],
                       fail_silently=False
-
                       )
 
             return HttpResponse('registration sucessfully')
         else:
-            return HttpResponse('in')
+            return HttpResponse('not valid')
    
       
     return render(request,'registration.html',d)
@@ -64,7 +63,7 @@ def user_login(request):
             request.session['username']=username
             return HttpResponseRedirect(reverse('home'))
         else:
-            return HttpResponse('password and user name wrong') 
+            return HttpResponse('password or username wrong') 
         
     return render(request,'user_login.html')
 
@@ -72,6 +71,23 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('home'))
+@login_required
+def display_profile(request):
+    username=request.session.get('username')
+    UO=User.objects.get(username=username)
+    PO=Profile.objects.get(username=UO)
+    d={'uo':UO,'PO':PO}
+    return render(request,'display_profile.html',d)
+@login_required
+def change_password(request):
+    if request.method=='POST':
+        pw=request.POST['pw']
+        username=request.session.get('username')
+        uo=User.objects.get(username=username)
+        uo.set_password(pw)
+        uo.save()
+        return HttpResponse('password changed successfully')
+    return render(request,'change_password.html')
     
 
 
